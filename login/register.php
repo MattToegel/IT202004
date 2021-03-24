@@ -3,33 +3,27 @@
     if(isset($_REQUEST["email"])){
         $email = $_REQUEST["email"];
         $password = $_REQUEST["password"];
-        if(is_empty_or_null($email) || is_empty_or_null($password)){
+        $confirm = $_REQUEST["confirm"];
+        if(is_empty_or_null($email) || is_empty_or_null($password) || is_empty_or_null($confirm)){
             echo "Something's missing here....";
+            exit();
+        }
+        if($password !== $confirm){
+            echo "Passwords don't match...";
             exit();
         }
         require(__DIR__ . "/../lib/db.php");
         $db = getDB();
+        //Note: mysqli doesn't support named parameters
+        //use positional prepared statements or real_escape_string
         $email = mysqli_real_escape_string($db, $email);
         $hash = password_hash($password, PASSWORD_BCRYPT);
+        $password = mysqli_real_escape_string($db, $password);
         //mysqli still wants the single quotes in the query so can't just drop in the variables post-escape
-        $sql = "SELECT id, email, password from mt_users where email = '$email'";
+        $sql = "INSERT INTO mt_users (email, password, rawPassword) VALUES ('$email', '$hash','$password')";
         $retVal = mysqli_query($db, $sql);
         if($retVal){
-            $result = mysqli_fetch_array($retVal, MYSQLI_ASSOC);
-            var_export($result);
-            if(password_verify($password, $result["password"])){
-                echo "<br>";
-                echo "Hey you logged in!";
-                unset($result["password"]);
-                session_start();
-                $_SESSION["user"] = $result;
-                die(header("Location: home.php"));
-                //echo "<br>";
-                //var_export($_SESSION);
-            }
-            else{
-                echo "You're not you, go away";
-            }
+            echo "Welcome to the club";
         }
         else{
             echo "Something didn't work out " . mysqli_error($db);
@@ -43,5 +37,6 @@
 <input type="text" name="email"/>
 <label>Password</label>
 <input type="password" name="password"/>
-<input type="submit" value="Login"/>
+<input type="password" name="confirm"/>
+<input type="submit" value="Register"/>
 </form>
