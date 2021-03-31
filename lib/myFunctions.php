@@ -17,4 +17,8 @@ function getDebug($dumpAll = false){
         echo var_export($_SESSION, true);
     }
 }
+
+function safe($var){
+    echo htmlentities($var, ENT_QUOTES, "utf-8");
+}
 ?>

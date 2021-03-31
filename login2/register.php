@@ -1,5 +1,6 @@
 <?php
-    require(__DIR__ . "/../lib/myFunctions.php");
+    require("nav.php");
+    //require(__DIR__ . "/../lib/myFunctions.php");
     if(isset($_REQUEST["email"])){
         $email = $_REQUEST["email"];
         $password = $_REQUEST["password"];
@@ -16,6 +17,12 @@
         //$db = getDB();//invoked in db.php already
         //Note: mysqli doesn't support named parameters
         //use positional prepared statements or real_escape_string
+       
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            echo "Invalid email!!!";
+            die();
+        }
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
         $email = mysqli_real_escape_string($db, $email);
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $password = mysqli_real_escape_string($db, $password);

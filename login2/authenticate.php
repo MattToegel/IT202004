@@ -1,5 +1,6 @@
 <?php
-    require(__DIR__ . "/../lib/myFunctions.php");
+    require("nav.php");
+    //require(__DIR__ . "/../lib/myFunctions.php");
     if(isset($_REQUEST["email"])){
         $email = $_REQUEST["email"];
         $password = $_REQUEST["password"];
@@ -12,7 +13,7 @@
         $email = mysqli_real_escape_string($db, $email);
         $hash = password_hash($password, PASSWORD_BCRYPT);
         //mysqli still wants the single quotes in the query so can't just drop in the variables post-escape
-        $sql = "SELECT id, email, password from mt_users where email = '$email'";
+        $sql = "SELECT id, email, password from mt_users where email = '$email' LIMIT 1";
         $retVal = mysqli_query($db, $sql);
         if($retVal){
             $result = mysqli_fetch_array($retVal, MYSQLI_ASSOC);
@@ -21,8 +22,10 @@
                 echo "<br>";
                 echo "Hey you logged in!";
                 unset($result["password"]);
-                session_start();
+                //session_start();
                 $_SESSION["user"] = $result;
+                //uncomment below to have an example of malicious user data
+                ///$_SESSION["user"]["email"] = "<script>alert('The cookie monster has your cookies!' + document.cookie);</script>";
                 die(header("Location: home.php"));
                 //echo "<br>";
                 //var_export($_SESSION);

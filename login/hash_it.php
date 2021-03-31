@@ -5,5 +5,5 @@ $b = password_hash($password, PASSWORD_BCRYPT);
 echo $a . "<br>";
 echo $b . "<br>";
 
-echo '$a == $b?' . ($a == $b?"true":"false");
+echo 'Does $a == $b?' . ($a == $b?"true":"false");
 ?>
