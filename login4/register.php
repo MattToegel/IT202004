@@ -53,8 +53,19 @@
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $password = mysqli_real_escape_string($db, $password);
         
-        $sql = "INSERT INTO mt_users (email, password, rawPassword, username) VALUES ('$email', '$hash','$password', '$username')";
-        $retVal = mysqli_query($db, $sql);
+        ///$sql = "INSERT INTO mt_users (email, password, rawPassword, username) VALUES ('$email', '$hash','$password', '$username')";
+        //query with placeholders
+        $sql = "INSERT INTO mt_users (email, password, rawPassword, username) VALUES (?,?,?,?)";
+        //init a statement "object"
+        $stmt = mysqli_stmt_init($db);
+        //prepare the sql
+        mysqli_stmt_prepare($stmt, $sql);
+        //bind the values to pass in (sanitizes)
+        mysqli_stmt_bind_param($stmt, "ssss", $email, $hash, $password, $username);
+        //executes everything
+        $retVal = mysqli_stmt_execute($stmt);
+
+        //$retVal = mysqli_query($db, $sql);
         if($retVal){
             echo "Welcome to the club";
         }
