@@ -1,9 +1,11 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 function getDB(){
   global $db;
   if(!isset($db)){
-    include ("account.php") ; 
+    require (__DIR__."/account.php") ; 
     $db = mysqli_connect($hostname,$username,$password, $project );
     if (mysqli_connect_errno()){      
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -14,4 +16,5 @@ function getDB(){
   }
   return $db;
 }
+$db = getDB();//This is valid
 ?>
