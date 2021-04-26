@@ -38,6 +38,13 @@ function get_email()
     return "";
 }
 
+function get_user_id(){
+     if (is_logged_in()) {
+        return $_SESSION["user"]["id"];
+    }
+    return -1;
+}
+
 function get_username()
 {
     if (is_logged_in()) {
