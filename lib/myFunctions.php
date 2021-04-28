@@ -38,8 +38,9 @@ function get_email()
     return "";
 }
 
-function get_user_id(){
-     if (is_logged_in()) {
+function get_user_id()
+{
+    if (is_logged_in()) {
         return $_SESSION["user"]["id"];
     }
     return -1;
@@ -56,7 +57,8 @@ function get_username()
     return "";
 }
 
-function mysql_error_info($db){
+function mysql_error_info($db)
+{
     if ($db != null) {
         $code = mysqli_errno($db);
         $state = mysqli_sqlstate($db);
@@ -77,4 +79,40 @@ function mysql_error_info($db){
     } else {
         return "Database is null???";
     }
+}
+
+function getScores($db, $user_id = -1, $type = "lifetime")
+{
+    //$type weekly, monthly, lifetime
+    $query = "SELECT s.score, u.username, u.id, s.created FROM mt_users u JOIN mt_scores s on u.id = s.user_id";
+    if ($user_id > -1) {
+        $user_id = mysqli_real_escape_string($db, $user_id);
+    
+        $query .= " WHERE user_id = $user_id";
+    }
+    switch ($type) {
+        case "lifetime":
+            break;
+        case "weekly":
+            $query .= " AND s.created >= DATE_SUB(NOW(), INTERVAL 1 WEEK) ";
+            break;
+        case "monthly":
+            $query .= " AND s.created >= DATE_SUB(NOW(), INTERVAL 1 MONTH) ";
+            break;
+        default:
+            break;
+    }
+    $query .= " order by s.created desc LIMIT 10";
+    $retVal = mysqli_query($db, $query);
+    $results = [];
+    if ($retVal) {
+     
+        if (mysqli_num_rows($retVal) > 0) {
+            while ($row = mysqli_fetch_assoc($retVal)) {
+                array_push($results, $row);
+            }
+        }
+        mysqli_close($db);
+    }
+    return $results;
 }

@@ -25,6 +25,7 @@ require(__DIR__ . "/../lib/myFunctions.php");
 <?php endif;?>
 <?php if(is_logged_in()):?>
 <li><a href="home.php">Home</a></li>
+<li><a href="profile.php">Profile</a></li>
 <li><a href="logout.php">Logout</a></li>
 <?php endif;?>
 </ul>

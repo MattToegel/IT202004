@@ -1,10 +1,9 @@
 <?php
+
 require("nav.php");
-//getDebug(true);
-if(!is_logged_in()){
-    die(header("Location: authenticate.php"));
-}
+require(__DIR__ . "/../lib/db.php");
+
+$weekly = getScores($db, -1, "weekly");
+$monthly = getScores($db, -1, "monthly");
+$lifetime = getScores($db, -1, "life");
 ?>
-<div>
-Welcome, <?php safe(get_username());?>!
-</div>
