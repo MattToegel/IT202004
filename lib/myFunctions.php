@@ -104,6 +104,7 @@ function getScores($db, $user_id = -1, $type = "lifetime")
     }
     $query .= " order by s.created desc LIMIT 10";
     $retVal = mysqli_query($db, $query);
+
     $results = [];
     if ($retVal) {
      
@@ -112,7 +113,7 @@ function getScores($db, $user_id = -1, $type = "lifetime")
                 array_push($results, $row);
             }
         }
-        mysqli_close($db);
+        //mysqli_close($db);
     }
     return $results;
 }
