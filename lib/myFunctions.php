@@ -102,7 +102,7 @@ function getScores($db, $user_id = -1, $type = "lifetime")
         default:
             break;
     }
-    $query .= " order by s.created desc LIMIT 10";
+    $query .= " order by s.score desc, s.created desc LIMIT 10";
     $retVal = mysqli_query($db, $query);
 
     $results = [];
